@@ -1,0 +1,80 @@
+﻿@model teste_19_10_14.Models.FuncionarioViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div class="row" id="app">
+    <p>
+        <div class="column-md-2">
+            Código Cliente*
+            @Html.DropDownListFor(x => x.TipoAcao, (SelectList)ViewBag.TipoAcao, "Selecione", new Dictionary<string, object> { { "v-model", "tipoExibicao" } })
+        </div>
+    </p>
+
+    <template v-if="tipoExibicao === '01'">
+
+        @if (Model != null)
+        {
+            <div>Último usuário inserido</div>
+            <div class="col-md-4">
+                <ul class="list-group">
+                    <li class="list-group-item"> ID: <b> @Model.Id</b></li>
+                    <li class="list-group-item"> Nome: <b> @Model.NOME</b></li>
+                    <li class="list-group-item"> Cargo ID: <b> @Model.ID_CARGO</b></li>
+                    <li class="list-group-item"> Descrição Cargo: <b> @Model.DESC_CARGO</b></li>
+                    <li class="list-group-item"> Data Entrada: <b> @Model.DATA_ENTRADA</b></li>
+                    <li class="list-group-item"> Salario: <b> @Model.SALARIO</b></li>
+                </ul>
+            </div>
+
+            <a>@Html.ActionLink("Deletar", "Deletar", "Home", new { area = "", id = Model.Id })</a>
+        }
+        else
+        {
+            <div>Nenhum usuário identificado</div>
+        }
+    </template>
+
+    <template v-if="tipoExibicao === '02'">
+
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, Model))
+        {
+            <div>
+                Inserir novo Usuário:
+                    <div class="column-md-2">
+                        Nome*
+                        @Html.TextBoxFor(x => x.NOME)
+                    </div>
+                    <div class="column-md-2">
+                        Cargo*
+                        @Html.DropDownListFor(x => x.ID_CARGO, (SelectList)ViewBag.Cargos, "Selecione")
+                    </div>
+                    <div class="column-md-2">
+                        Salário*
+                        @Html.TextBoxFor(x => x.SALARIO, new Dictionary<string, object> { { "v-mask", "'R$ ######,##'" } })
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <input type="submit" value="Salvar" class="col-sm-2" />
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        }
+    </template>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            tipoExibicao: ''
+        }
+    })
+</script>
